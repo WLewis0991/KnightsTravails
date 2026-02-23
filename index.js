@@ -1,16 +1,5 @@
 //* Knights Travails
 
-class Queue {
-    constructor() {
-        this.path = []
-    }   
-    enqueue(pos){
-        this.path.push(pos)
-    }
-    dequeue(){
-        return this.path.shift()
-    }
-}
 
 function valid(pos) {
     if (pos[0] >= 0 && pos[0] <= 7 && pos[1] >= 0 && pos[1] <= 7) {
@@ -21,21 +10,45 @@ function valid(pos) {
 }
 
 function knightsMoves(start, end){
-    const path = new Queue();
     if ( JSON.stringify(start) === JSON.stringify(end) ){
-        console.log("Your already here!")
+        console.log(`Your already here at [${start}] in 0 moves!`)
         return
     }
     if ((!valid(start) || !valid(end)) || checkVisited(start) == true){
         console.log("invalid")
     }else {
-        path.enqueue(start)
+        const queue = [[start]];
+        const visitedLocations = [];
         visitedLocations.push(start)
-        console.log(path)
-        console.log(visitedLocations)
-        console.log("valid")
+
+        while (queue.length > 0){
+            const path = queue.shift();
+            const [x, y] = path[path.length -1];
+            for ( const [dx, dy] of possibleMoves){
+                const nextMove = [dx +x, dy + y];
+                if ( !valid(nextMove)){
+                    continue
+                }
+                if (JSON.stringify(visitedLocations).indexOf(nextMove) >= 0){
+                    continue
+                }
+                if (JSON.stringify(nextMove) === JSON.stringify(end)){
+                    console.log(`You made it in ${path.length} moves! This is how you got here:`)
+                    path.forEach((pos) => console.log(JSON.stringify(pos)))
+                    return
+                } else {
+                    console.log(nextMove)
+                    const newPath = [...path, nextMove]
+                    queue.push(newPath);
+                    visitedLocations.push(nextMove)
+                }
+            }
+        }
+
     }
 }
+
+const visitedLocations = []
 
 function checkVisited (pos){
     const visited = JSON.stringify(visitedLocations)
@@ -47,15 +60,10 @@ function checkVisited (pos){
     }
 }
 
-
-const visitedLocations = [
-    [7,1]
-]
-
 const possibleMoves = [
     [-1, 2], [1, 2], [2, 1], [2, -1],
     [1, -2], [-1, -2], [-2, -1], [-2, 1] 
 ]
 
 
-knightsMoves([3, 1], [3,0])
+knightsMoves([0, 0], [0, 0])
