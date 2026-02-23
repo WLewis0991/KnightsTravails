@@ -3,22 +3,15 @@
 class Queue {
     constructor() {
         this.path = []
-    }
-    
+    }   
     enqueue(pos){
-        if(!valid(pos)){
-            return null
-        } else{
-        visited.push(pos)
         this.path.push(pos)
-        }
-}
-
+    }
     dequeue(){
         return this.path.shift()
     }
-
 }
+
 function valid(pos) {
     if (pos[0] >= 0 && pos[0] <= 7 && pos[1] >= 0 && pos[1] <= 7) {
         return true;
@@ -29,26 +22,33 @@ function valid(pos) {
 
 function knightsMoves(start, end){
     const path = new Queue();
-    if ((!valid(start) || !valid(end)) || visited.includes(start)){
+    if ( JSON.stringify(start) === JSON.stringify(end) ){
+        console.log("Your already here!")
+        return
+    }
+    if ((!valid(start) || !valid(end)) || checkVisited(start) == true){
         console.log("invalid")
     }else {
         path.enqueue(start)
+        visitedLocations.push(start)
         console.log(path)
+        console.log(visitedLocations)
+        console.log("valid")
     }
 }
 
 function checkVisited (pos){
-    const visited = JSON.stringify(visitedLocation)
+    const visited = JSON.stringify(visitedLocations)
     const position = JSON.stringify(pos)
     if ( visited.indexOf(position) >= 0){
-        console.log("visited")
+        return true
     }else {
-        console.log("not visited")
+        return false
     }
 }
 
 
-const visitedLocation = [
+const visitedLocations = [
     [7,1]
 ]
 
@@ -58,4 +58,4 @@ const possibleMoves = [
 ]
 
 
-checkVisited([7, 1])
+knightsMoves([3, 1], [3,0])
