@@ -1,13 +1,13 @@
-import { checkVisited, valid } from "./checkValidity.js";
+import { valid } from "./checkValidity.js";
 
-export { knightsMoves, visitedLocations };
+export { knightsMoves };
 
 function knightsMoves(start, end){
     if ( JSON.stringify(start) === JSON.stringify(end) ){
         console.log(`Your already here at [${start}] in 0 moves!`)
         return
     }
-    if ((!valid(start) || !valid(end)) || checkVisited(start) == true){
+    if ((!valid(start) || !valid(end))){
         console.log("Please choose numbers from 0 to 7")
     }else {
         const queue = [[start]];
@@ -22,15 +22,17 @@ function knightsMoves(start, end){
                 if ( !valid(nextMove)){
                     continue
                 }
-                if (JSON.stringify(visitedLocations).indexOf(nextMove) >= 0){
-                    continue
+                if (visitedLocations.some(
+                    ([vx, vy]) => vx === nextMove[0] && vy === nextMove[1]
+                )) {
+                    continue;
                 }
-                if (JSON.stringify(nextMove) === JSON.stringify(end)){
+                if (nextMove[0] === end[0] && nextMove[1] === end[1]){
                     console.log(`You made it in ${path.length} moves! This is how you got here:`)
                     path.forEach((pos) => console.log(JSON.stringify(pos)))
+                    console.log(JSON.stringify(nextMove))
                     return
                 } else {
-                    console.log(nextMove)
                     const newPath = [...path, nextMove]
                     queue.push(newPath);
                     visitedLocations.push(nextMove)
@@ -45,5 +47,3 @@ const possibleMoves = [
     [-1, 2], [1, 2], [2, 1], [2, -1],
     [1, -2], [-1, -2], [-2, -1], [-2, 1] 
 ]
-
-const visitedLocations = []
